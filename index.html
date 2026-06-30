@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Your Perfect Online Income Path</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #0b0f1a;
+    --surface: #131929;
+    --surface2: #1a2235;
+    --border: #1e2d45;
+    --gold: #f5a623;
+    --gold-dim: #c47f0e;
+    --teal: #00c9a7;
+    --teal-dim: #009e83;
+    --text: #e8edf5;
+    --muted: #8494a8;
+    --danger: #ff6b6b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 56px 24px 40px;
+    background: linear-gradient(180deg, #0e1523 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(245,166,35,0.12);
+    border: 1px solid rgba(245,166,35,0.35);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  header h1 span { color: var(--gold); }
+  header p {
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto;
+    font-size: 16px;
+  }
+
+  /* ── QUIZ WRAPPER ── */
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 36px;
+  }
+  .progress-bar span {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 4px;
+    transition: background 0.3s;
+  }
+  .progress-bar span.done { background: var(--gold); }
+  .progress-bar span.active { background: var(--teal); }
+
+  /* ── QUESTION CARD ── */
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 36px 32px;
+    animation: fadeUp 0.4s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .q-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 10px;
+  }
+  .q-text {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(18px, 3vw, 24px);
+    font-weight: 700;
+    margin-bottom: 28px;
+    line-height: 1.3;
+  }
+  .options {
+    display: grid;
+    gap: 12px;
+  }
+  .opt-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    text-align: left;
+    color: var(--text);
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+  }
+  .opt-btn:hover { border-color: var(--gold); background: rgba(245,166,35,0.06); }
+  .opt-btn.selected { border-color: var(--gold); background: rgba(245,166,35,0.12); }
+  .opt-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  /* ── RESULT AREA ── */
+  #result { display: none; animation: fadeUp 0.5s ease both; }
+
+  .result-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .result-header .badge { background: rgba(0,201,167,0.1); border-color: rgba(0,201,167,0.3); color: var(--teal); }
+  .result-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: 800;
+    margin: 12px 0 8px;
+    line-height: 1.2;
+  }
+  .result-header p { color: var(--muted); font-size: 15px; }
+
+  /* ── PROGRAM CARD ── */
+  .prog-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 28px 24px;
+    margin-bottom: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .prog-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--gold);
+    border-radius: 4px 0 0 4px;
+  }
+  .prog-card.marketing::before { background: var(--teal); }
+  .prog-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .prog-hook {
+    font-size: 13px;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 12px;
+    letter-spacing: 0.3px;
+  }
+  .prog-card.marketing .prog-hook { color: var(--teal); }
+  .prog-body {
+    font-size: 14.5px;
+    color: #c0cdd8;
+    line-height: 1.7;
+    margin-bottom: 18px;
+  }
+  .prog-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .prog-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gold);
+    color: #0b0f1a;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 11px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .prog-cta:hover { background: #e09410; transform: translateY(-1px); }
+  .prog-card.marketing .prog-cta { background: var(--teal); }
+  .prog-card.marketing .prog-cta:hover { background: var(--teal-dim); }
+
+  /* ── SECTION DIVIDER ── */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 36px 0 24px;
+  }
+  .section-divider span {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+    white-space: nowrap;
+  }
+  .section-divider::before,
+  .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── LOADING ── */
+  #loading { display: none; text-align: center; padding: 60px 20px; }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 3px solid var(--border);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 20px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #loading p { color: var(--muted); font-size: 15px; }
+
+  /* ── ERROR ── */
+  #error-box {
+    display: none;
+    background: rgba(255,107,107,0.1);
+    border: 1px solid rgba(255,107,107,0.3);
+    border-radius: 12px;
+    padding: 20px 24px;
+    color: var(--danger);
+    margin-top: 24px;
+    font-size: 14px;
+  }
+
+  /* ── RESTART ── */
+  .restart-btn {
+    display: block;
+    text-align: center;
+    margin-top: 36px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 12px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.2s, color 0.2s;
+    width: 100%;
+  }
+  .restart-btn:hover { border-color: var(--gold); color: var(--text); }
+
+  /* ── DISCLAIMER ── */
+  .disclaimer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 48px;
+    padding: 0 20px;
+    line-height: 1.6;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">Free · No signup required</div>
+  <h1>Find Your <span>Perfect</span> Online Income Path</h1>
+  <p>Answer 4 quick questions and our AI will match you to the best side hustle for your lifestyle — with everything you need to get started today.</p>
+</header>
+
+<main>
+
+  <!-- Progress -->
+  <div class="progress-bar" id="progressBar">
+    <span class="active"></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="question-card" id="questionCard"></div>
+  </div>
+
+  <!-- Loading -->
+  <div id="loading">
+    <div class="spinner"></div>
+    <p>Finding your best income matches…</p>
+  </div>
+
+  <!-- Error -->
+  <div id="error-box"></div>
+
+  <!-- Result -->
+  <div id="result">
+    <div class="result-header">
+      <div class="badge">Your Personal Match</div>
+      <h2 id="resultHeadline"></h2>
+      <p id="resultSubtitle"></p>
+    </div>
+    <div id="resultCards"></div>
+    <div class="section-divider"><span>🚀 Promote Any Hustle You Choose</span></div>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">Whatever path you pick, you'll need traffic, leads and marketing tools. These four platforms are built exactly for that — and they work for any online business or side hustle.</p>
+    <div id="marketingCards"></div>
+    <button class="restart-btn" onclick="restart()">↩ Start Over — Retake the Quiz</button>
+  </div>
+
+  <p class="disclaimer">Results are personalised suggestions based on your answers. Individual earnings vary. This page contains affiliate links — we may earn a commission if you purchase through them, at no extra cost to you.</p>
+</main>
+
+<script>
+// ── QUIZ QUESTIONS ──────────────────────────────────────────────
+const questions = [
+  {
+    label: "Question 1 of 4",
+    text: "How much time can you realistically dedicate each day?",
+    options: [
+      { icon: "⚡", label: "30–60 minutes", value: "micro" },
+      { icon: "🕐", label: "1–2 hours",    value: "parttime" },
+      { icon: "🕒", label: "3–4 hours",    value: "dedicated" },
+      { icon: "💼", label: "Full-time (5+ hours)", value: "fulltime" }
+    ]
+  },
+  {
+    label: "Question 2 of 4",
+    text: "What describes your current situation best?",
+    options: [
+      { icon: "👔", label: "I have a full-time job & want side income", value: "employed" },
+      { icon: "🔍", label: "I'm between jobs / looking for income",      value: "unemployed" },
+      { icon: "🎓", label: "I'm a student wanting to earn online",       value: "student" },
+      { icon: "🏠", label: "Stay-at-home / retired / flexible schedule", value: "flexible" }
+    ]
+  },
+  {
+    label: "Question 3 of 4",
+    text: "What kind of online income appeals to you most?",
+    options: [
+      { icon: "🤖", label: "Passive / automated — earn while I sleep",   value: "passive" },
+      { icon: "📹", label: "Content creation — videos, social media",    value: "content" },
+      { icon: "🔗", label: "Affiliate marketing — promote & earn commissions", value: "affiliate" },
+      { icon: "🛠️", label: "Done-for-you — I just want a ready system", value: "dfy" }
+    ]
+  },
+  {
+    label: "Question 4 of 4",
+    text: "What's your current experience level online?",
+    options: [
+      { icon: "🌱", label: "Complete beginner — starting from scratch",  value: "beginner" },
+      { icon: "📈", label: "Some experience — tried a few things",       value: "intermediate" },
+      { icon: "🚀", label: "Experienced — I know my way around",         value: "advanced" },
+      { icon: "🤷", label: "Not sure — I'll try anything that works",    value: "unsure" }
+    ]
+  }
+];
+
+// ── PROGRAM DATABASE ────────────────────────────────────────────
+const programs = {
+  p1: {
+    id: "p1",
+    name: "Escape Plan IS1",
+    hook: "A $7 blueprint that replaced a construction job with $4M in digital income",
+    body: "Built by Mark Bishop — a dyslexic construction worker who went from zero experience to over $4,000,000 online — Escape Plan IS1 is a collection of proven affiliate systems including a Copy & Paste method that generates $500–$800 in about 3 hours, a fully automated IFTF system that earns commissions on autopilot just by giving away free training, and a Reverse Promotion system that has generated over $318,000. No autoresponder needed. No tech skills required. And it's currently available for just $7 with a 14-day money-back guarantee.",
+    pills: ["Entry: $7 today", "$250–$1,000/mo potential", "Beginner-friendly", "14-day guarantee"],
+    cta: "Get Instant Access for $7 →",
+    link: "https://warriorplus.com/o2/a/gx4ph3f/0",
+    tags: ["passive","affiliate","beginner","unsure","micro","parttime","employed","unemployed","student","flexible"]
+  },
+  p2: {
+    id: "p2",
+    name: "Instant Profits Club",
+    hook: "Give away free memberships and earn commissions automatically — zero selling required",
+    body: "Instant Profits Club is a done-for-you income system where you simply share free membership passes to others interested in making money online. When your referrals choose optional upgrades inside the members area, you get paid instantly — multiple streams including a Leads Converter, Commission Jack high-ticket module, Traffic Accelerator, and a monthly recurring income option worth up to $137.50 per member. Promotional banners, email swipes, and social posts are all provided. No product, no website, no experience needed — just an internet connection and 30 minutes.",
+    pills: ["Free to join", "Multiple income streams", "Up to $137.50/member", "All tools provided"],
+    cta: "Claim Your Free Membership →",
+    link: "https://warriorplus.com/o2/a/pb92kqy/0",
+    tags: ["passive","affiliate","dfy","beginner","unsure","micro","parttime","employed","student","flexible"]
+  },
+  p3: {
+    id: "p3",
+    name: "Free Video Online Income",
+    hook: "Get free access to business marketing videos and earn commissions for every VIP enrolment you refer",
+    body: "This platform distributes high-quality business marketing video training to members and the public. As a member, your job is simple: share access to the free video library. Every time someone you refer upgrades to a VIP membership, you earn a commission — no hard selling, just sharing something genuinely valuable. It's perfectly suited for those who want a low-effort, conversation-friendly way to earn online without having a product or building anything from scratch.",
+    pills: ["Free to start", "$250–$1,000/mo", "Share & earn model", "All levels welcome"],
+    cta: "Access Free Video Income →",
+    link: "https://imincomesystem.com/freevideos/805.htm",
+    tags: ["affiliate","passive","beginner","micro","parttime","employed","student","flexible","unsure"]
+  },
+  p4: {
+    id: "p4",
+    name: "Free Invitation IM Income",
+    hook: "Invite others to a proven internet business training platform and get paid for every enrolment",
+    body: "This invitation-based platform gives you a simple, duplicable income model: you receive access to a professional internet marketing training system and share your unique invite link with anyone interested in learning how to make money online. Every person who joins and invests in the training earns you a commission. With no product to create and no complicated tech setup, this is one of the cleanest 'invite and earn' models available — especially for people who are naturally social and enjoy connecting others with useful opportunities.",
+    pills: ["Invite & earn", "$250–$1,000/mo", "No product needed", "Beginner to advanced"],
+    cta: "Get Your Free Invitation →",
+    link: "https://imincomesystem.com/invite/805.htm",
+    tags: ["affiliate","beginner","parttime","employed","student","flexible","unsure","micro"]
+  },
+  p5: {
+    id: "p5",
+    name: "The Hidden Goldmine",
+    hook: "Sell simple text files and digital micro-products to 5 million+ buyers — AI does the heavy lifting",
+    body: "James Renouf and Max Gerstenmeyer discovered an overlooked digital marketplace with over 5,000,000 active buyers where tiny AI-generated products — think a Notion template, a Google Doc, a text file — are selling for $7 to $40/month on repeat. The Hidden Goldmine reveals how they use free AI tools to create these micro-products in minutes, then plug them into a built-in monetization network that pays automatically. No face, no following, no selling — just products and a marketplace that already exists. They've documented $88k months from this method alone.",
+    pills: ["5M+ marketplace buyers", "$40/mo recurring products", "AI-powered creation", "No selling needed"],
+    cta: "Discover the Hidden Goldmine →",
+    link: "https://warriorplus.com/o2/a/gq490vr/0",
+    tags: ["passive","content","affiliate","intermediate","advanced","parttime","dedicated","fulltime","employed","flexible"]
+  },
+  p6: {
+    id: "p6",
+    name: "HOOKD",
+    hook: "Build AI-powered digital 'Entities' people can't stop using — and earn every time they return",
+    body: "HOOKD is a brand new category of online income. James Renouf and Max Gerstenmeyer built interactive AI-powered digital 'Entities' — not chatbots, not funnels — that people engage with obsessively and return to daily. The platform they use has built-in monetization, meaning every interaction pays creators automatically without any selling or pitching. You build the Entity once (in seconds) and it becomes a self-sustaining attention magnet with built-in affiliate monetization in any niche. Already reaching 700,000+ recurring users. No followers, no product, no experience required.",
+    pills: ["Built-in monetization", "700K+ recurring users", "Any niche", "No prior experience"],
+    cta: "Get HOOKD Now →",
+    link: "https://warriorplus.com/o2/a/w31p4rc/0",
+    tags: ["passive","content","affiliate","intermediate","advanced","beginner","parttime","dedicated","flexible","employed"]
+  },
+  p7: {
+    id: "p7",
+    name: "Results With Kevin AI",
+    hook: "Kevin's AI-powered system for generating consistent online income — step by step",
+    body: "Results With Kevin is a training and income system designed around AI-assisted online marketing. Kevin walks you through a practical, no-fluff approach to building income streams using today's AI tools — no guesswork, no overly complex tech. Whether you're brand new or have tried and struggled before, this system focuses on getting you to actual results fast by following a clear, tested framework. Ideal for anyone who wants a personal-coach-style guide through the online income landscape.",
+    pills: ["AI-assisted system", "$250–$1,000/mo", "Step-by-step guidance", "All levels"],
+    cta: "See Results With Kevin →",
+    link: "https://warriorplus.com/o2/a/gn8fqwk/0",
+    tags: ["beginner","intermediate","affiliate","passive","parttime","employed","student","unsure","micro","flexible"]
+  },
+  p8: {
+    id: "p8",
+    name: "DFY Monetized YouTube Channel",
+    hook: "Get a fully monetized YouTube channel built for you in 24 hours — earn from your very first video",
+    body: "Award-winning YouTuber Dave Nick — the pioneer of YouTube Automation — delivers a completely Done-For-You, YouTube Partner Program (YPP) approved channel ready to earn from Day 1. You get a faceless channel built to his specifications, meaning you never have to appear on camera. Upload your first video and you're earning. This isn't a course about how to maybe get monetized — it's a ready channel, handed to you. Dave's method has already produced channels earning $1,000 to $5,000+ monthly from faceless content.",
+    pills: ["Monetized in 24hrs", "$1,000–$5,000/mo", "Faceless — no camera", "YPP approved"],
+    cta: "Get Your DFY YouTube Channel →",
+    link: "https://dfydave.com/monetization?p=CCFB4EBA",
+    tags: ["content","dfy","passive","intermediate","advanced","parttime","dedicated","fulltime","flexible","unemployed"]
+  },
+  p9: {
+    id: "p9",
+    name: "DFY Monetized Social Platforms",
+    hook: "Dave Nick builds you a fully monetized TikTok, Amazon site, YouTube, or viral video package",
+    body: "This is Dave Nick's full DFY suite — going beyond YouTube to offer TikTok monetization setups, Amazon affiliate websites, 100k-subscriber Platinum YouTube channels, Viral YouTube Video packages, channel audits, and personal coaching. Dave has built an empire through YouTube automation and now builds these assets for others. For anyone serious about building a real online income presence across multiple platforms without doing the groundwork themselves, this is the shortcut to a professionally set-up digital business earning $5,000 to $25,000/month.",
+    pills: ["Multi-platform DFY", "$5,000–$25,000/mo", "TikTok + YouTube + Amazon", "Professional setup"],
+    cta: "See All DFY Social Options →",
+    link: "https://www.dfydave.com/?p=CCFB4EBA",
+    tags: ["content","dfy","passive","advanced","intermediate","dedicated","fulltime","flexible","unemployed","employed"]
+  },
+  p10: {
+    id: "p10",
+    name: "7-Figure Accelerator",
+    hook: "A high-income system for scaling to $5k/day with step-by-step training",
+    body: "The 7-Figure Accelerator is a premium training programme built for those who are ready to stop dabbling and build a serious online income business. With a focus on scaling — not just starting — it covers the advanced strategies that take people from a few hundred dollars a month to $1,000–$5,000 per day. The system covers traffic, offers, automation, and scaling, packaged into an actionable roadmap you can follow regardless of your current level. Perfect for anyone who's tried smaller programmes and is ready to go bigger.",
+    pills: ["Up to $5k/day", "Scale-focused", "Advanced training", "Any niche"],
+    cta: "Enter the 7-Figure Accelerator →",
+    link: "https://jvz7.com/c/2832101/415009",
+    tags: ["passive","affiliate","content","advanced","intermediate","dedicated","fulltime","employed","flexible","unemployed"]
+  },
+  p11: {
+    id: "p11",
+    name: "CourseReel AI",
+    hook: "Turn any topic into a professional course or video in minutes using AI",
+    body: "CourseReel AI lets you create stunning video courses, training content, and educational products using AI — without recording yourself, hiring editors, or needing design skills. If you want to build a content-based income stream (selling courses, creating YouTube content, or building a knowledge business), CourseReel dramatically shortens the production time. Create and sell your own courses, or use it to produce faceless YouTube content at scale. A genuinely powerful tool for the modern content creator.",
+    pills: ["AI video creation", "$1,000–$5,000/mo", "Sell courses online", "No camera needed"],
+    cta: "Create with CourseReel AI →",
+    link: "https://jvz4.com/c/2832101/414303",
+    tags: ["content","advanced","intermediate","dedicated","fulltime","parttime","flexible","employed","unemployed"]
+  },
+  p12: {
+    id: "p12",
+    name: "AI White Label",
+    hook: "Sell AI-powered software as your own brand — keep 100% of the profits",
+    body: "AI White Label lets you take fully built, proven AI software tools and rebrand them as your own product. You sell them under your own brand, set your own price, and keep all the profit — no building, no coding, no technical team required. This is one of the fastest growing business models in 2025: AI SaaS reselling. Especially powerful for those who want a high-margin digital product business without the months of product development.",
+    pills: ["Keep 100% profit", "Your own brand", "$1,000–$5,000/mo", "No coding required"],
+    cta: "Launch Your AI White Label →",
+    link: "https://jvz1.com/c/2832101/413443",
+    tags: ["dfy","advanced","intermediate","content","affiliate","fulltime","dedicated","flexible","employed","unemployed"]
+  },
+  p13: {
+    id: "p13",
+    name: "Domain Nesting",
+    hook: "Buy low-value domains, flip them to businesses for big profits — no website building needed",
+    body: "Domain Nesting teaches a clean, underrated side hustle: finding undervalued domain names, registering them cheaply, and selling them to businesses, brands, and investors who need them. There's no content to create, no SEO, no social media, no ads — just understanding domain value and connecting the right domain with the right buyer. Domains are digital real estate, and like physical real estate, the right one at the right time can be worth thousands. This training shows you exactly how to find, evaluate, and flip them.",
+    pills: ["No website needed", "$1,000–$5,000/mo", "Digital real estate", "Low start-up cost"],
+    cta: "Learn Domain Nesting →",
+    link: "https://jvz1.com/c/2832101/418319",
+    tags: ["passive","intermediate","beginner","parttime","micro","employed","student","flexible","unsure"]
+  },
+  p14: {
+    id: "p14",
+    name: "Local Biz AI",
+    hook: "Help local businesses with AI tools and get paid recurring monthly retainers",
+    body: "Local Biz AI shows you how to offer AI-powered marketing services to local businesses — restaurants, salons, clinics, gyms — who desperately need help but don't have the tech skills themselves. You become their AI consultant, using the provided tools and templates to deliver real results, and charge a recurring monthly fee. It's a service business model with low competition at the local level, high demand, and the kind of income that compounds month after month as you grow your client roster.",
+    pills: ["Recurring retainers", "$1,000–$5,000/mo", "Local market opportunity", "AI tools included"],
+    cta: "Start with Local Biz AI →",
+    link: "https://jvz1.com/c/2832101/424347",
+    tags: ["advanced","intermediate","content","dfy","fulltime","dedicated","employed","unemployed","flexible"]
+  },
+  p15: {
+    id: "p15",
+    name: "RPV Max — Earn More With Less Views",
+    hook: "Dave Nick's strategy to maximise YouTube earnings per view — work smarter, not harder",
+    body: "RPV (Revenue Per View) Max is Dave Nick's insider system for squeezing far more money out of fewer YouTube views. Most creators chase more views — Dave teaches you how to set up your channel, niches, and monetization in a way that makes each view worth dramatically more. If you already have a YouTube channel or plan to start one, this training changes the maths entirely. Fewer videos, fewer views, higher income. Ideal for creators tired of grinding with little to show for it.",
+    pills: ["Higher income per view", "YouTube strategy", "$1,000–$5,000/mo", "Works with any channel"],
+    cta: "Maximise with RPV Max →",
+    link: "https://whop.com/davenick/rpvmax?a=comfortok",
+    tags: ["content","advanced","intermediate","parttime","dedicated","fulltime","flexible","employed","unemployed"]
+  },
+  p16: {
+    id: "p16",
+    name: "Sleep Money Systems",
+    hook: "7 passive income systems coached by Dave Nick — designed to earn $30,000/month while you sleep",
+    body: "Sleep Money Systems is Dave Nick's premium live coaching programme covering 7 different online income systems — all designed to generate passive, automated income. Dave has documented months of $30,000+ from these methods and now teaches them step by step with live coaching calls. Whether it's faceless YouTube, affiliate systems, or digital product funnels, this programme covers multiple income streams so you're never dependent on just one. If you're ready to commit to building real recurring income with expert guidance, this is the programme.",
+    pills: ["7 income systems", "Live coaching", "Up to $30k/mo", "Dave Nick mentorship"],
+    cta: "Join Sleep Money Systems →",
+    link: "https://whop.com/obc/sleep-money-systems?a=comfortok",
+    tags: ["passive","content","dfy","advanced","intermediate","fulltime","dedicated","flexible","unemployed","employed"]
+  },
+  p17: {
+    id: "p17",
+    name: "Online Business Club",
+    hook: "25+ courses, $2k/mo giveaways, coaching calls, and global events — Dave Nick's inner circle",
+    body: "The Online Business Club is Dave Nick's all-access community membership giving you 25+ courses worth over $7,000, monthly cash giveaways up to $2,000, free global event tickets, direct coaching calls with Dave, and legitimate work-from-home job opportunities inside the community. If you want not just training but a genuine ecosystem of support, accountability, and real opportunities — this is it. It's the shortcut to surrounding yourself with people who are actually making money online, guided by someone who has already done it at scale.",
+    pills: ["25+ courses", "$2k/mo giveaways", "Live coaching", "Global community"],
+    cta: "Join the Online Business Club →",
+    link: "https://whop.com/obc/obc?a=comfortok",
+    tags: ["beginner","intermediate","advanced","dfy","passive","content","affiliate","parttime","dedicated","fulltime","flexible","employed","unemployed","student"]
+  }
+};
+
+// ── ALWAYS-SHOWN MARKETING PROGRAMS ────────────────────────────
+const marketingPrograms = [
+  {
+    name: "Crush AI",
+    hook: "AI-powered digital advertising — get your offer in front of buyers automatically",
+    body: "Crush AI is a smart digital advertising platform that uses artificial intelligence to help online marketers and side hustlers run more effective promotions with less effort. Whether you're promoting affiliate offers, your own products, or a side hustle, Crush AI analyses your campaign and automates the ad targeting process — putting your offer in front of people most likely to buy. Perfect for any side hustle that needs traffic and visibility without requiring you to become an ad expert.",
+    pills: ["AI ad targeting", "Any niche", "Automated campaigns"],
+    cta: "Try Crush AI →",
+    link: "https://uabminderse.pxf.io/Full-Report"
+  },
+  {
+    name: "My Lead Gen Secret",
+    hook: "100 fresh, targeted leads delivered to your inbox every single day — for $1/day",
+    body: "My Lead Gen Secret solves the hardest part of any online business: finding people to sell to. For just $1/day (after a one-time $30 setup fee), you get 100 hand-picked, permission-based internet marketing leads sent to you daily — complete with name, email, and IP address. A built-in mailing system lets you email them in under 20 minutes. These are leads who have actively raised their hand to receive marketing opportunities, making them far more receptive than cold audiences. Used by serious marketers to build income streams across any niche.",
+    pills: ["100 leads/day", "$1/day after setup", "Built-in email system", "Permission-based"],
+    cta: "Get My Lead Gen Secret →",
+    link: "https://www.myleadgensecret.com/?rid=51430"
+  },
+  {
+    name: "LeadsLeap",
+    hook: "Free traffic, autoresponder, page builder & 5 ways to make money — all in one platform since 2008",
+    body: "LeadsLeap is one of the most comprehensive free marketing platforms available, built and running since 2008 with over 171,000 members and 56 million real visitors sent. Free members get human (not bot) traffic to their websites, a 10-list autoresponder with unlimited subscribers, a page builder with hosting, a popup creator, a link tracker, and 5 different ways to earn money — including simply viewing ads. Pro membership at $27/month unlocks advanced features like unlimited everything, email series, and PDF rebranding. Whatever your side hustle, LeadsLeap gives you the marketing infrastructure to grow it.",
+    pills: ["Free forever plan", "171K+ members", "Traffic + tools + income", "Since 2008"],
+    cta: "Join LeadsLeap Free →",
+    link: "https://leadsleap.com/?r=comfyswiss02"
+  }
+];
+
+// ── STATE ───────────────────────────────────────────────────────
+let currentQ = 0;
+const answers = {};
+
+// ── RENDER QUESTION ─────────────────────────────────────────────
+function renderQuestion() {
+  const q = questions[currentQ];
+  const card = document.getElementById('questionCard');
+  card.innerHTML = `
+    <div class="q-label">${q.label}</div>
+    <div class="q-text">${q.text}</div>
+    <div class="options">
+      ${q.options.map(o => `
+        <button class="opt-btn" onclick="selectOption('${o.value}', this)">
+          <span class="opt-icon">${o.icon}</span>
+          <span>${o.label}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+  // Update progress
+  const bars = document.querySelectorAll('.progress-bar span');
+  bars.forEach((b, i) => {
+    b.className = i < currentQ ? 'done' : i === currentQ ? 'active' : '';
+  });
+}
+
+function selectOption(value, btn) {
+  // Highlight
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+
+  const key = ['time','situation','incomeType','experience'][currentQ];
+  answers[key] = value;
+
+  setTimeout(() => {
+    currentQ++;
+    if (currentQ < questions.length) {
+      // Re-animate
+      const card = document.getElementById('questionCard');
+      card.style.animation = 'none';
+      card.offsetHeight;
+      card.style.animation = '';
+      renderQuestion();
+    } else {
+      showLoading();
+      getRecommendation();
+    }
+  }, 380);
+}
+
+// ── SHOW/HIDE ───────────────────────────────────────────────────
+function showLoading() {
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('progressBar').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
+}
+function hideLoading() {
+  document.getElementById('loading').style.display = 'none';
+}
+
+// ── AI RECOMMENDATION ───────────────────────────────────────────
+async function getRecommendation() {
+  const programList = Object.values(programs).map(p =>
+    `PROGRAM: ${p.name}\nHOOK: ${p.hook}\nBODY: ${p.body}\nPILLS: ${p.pills.join(', ')}\nLINK: ${p.link}\nTAGS: ${p.tags.join(',')}`
+  ).join('\n\n---\n\n');
+
+  const userProfile = `
+Time available per day: ${answers.time}
+Current situation: ${answers.situation}
+Preferred income type: ${answers.incomeType}
+Experience level: ${answers.experience}
+  `.trim();
+
+  const prompt = `You are an expert online income advisor. Based on the user's profile below, select exactly 3 programs from the program list that best match their situation. Return ONLY a valid JSON array with no markdown, no explanation — just the JSON.
+
+USER PROFILE:
+${userProfile}
+
+PROGRAMS TO CHOOSE FROM:
+${programList}
+
+INSTRUCTIONS:
+1. Pick the 3 programs that genuinely fit the user's time, situation, income preference, and experience level best.
+2. For each selected program, write a short personalised "why this fits you" paragraph (2-3 sentences) referencing the user's specific situation. Keep it encouraging and specific.
+3. Return JSON in this exact format:
+[
+  {
+    "name": "Program Name Here",
+    "hook": "The hook text from the program",
+    "body": "The program body from the list",
+    "pills": ["pill1","pill2","pill3","pill4"],
+    "link": "the affiliate link",
+    "personalised": "Your personalised 2-3 sentence why-this-fits-you message here."
+  }
+]
+
+Return ONLY the JSON array. No markdown. No explanation. No other text.`;
+
+  try {
+    // This calls OUR OWN secure serverless function, not Anthropic directly.
+    // The API key never touches the browser — it stays safely on Netlify's server.
+    const response = await fetch("/.netlify/functions/get-recommendation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
+
+    const data = await response.json();
+    if (!data.content || !data.content[0]) throw new Error("Empty response");
+
+    let raw = data.content.map(c => c.text || '').join('');
+    raw = raw.replace(/```json|```/g, '').trim();
+    const picks = JSON.parse(raw);
+
+    hideLoading();
+    showResult(picks);
+  } catch(e) {
+    hideLoading();
+    // Fallback: pick 3 tag-matched programs manually
+    const fallback = pickFallback();
+    showResult(fallback);
+  }
+}
+
+function pickFallback() {
+  const tags = [answers.time, answers.situation, answers.incomeType, answers.experience];
+  const scored = Object.values(programs).map(p => ({
+    ...p,
+    score: tags.filter(t => p.tags.includes(t)).length,
+    personalised: `Based on your profile, this program aligns well with your available time and income goals. It's accessible for your experience level and designed to deliver results with the approach you prefer.`
+  }));
+  scored.sort((a,b) => b.score - a.score);
+  return scored.slice(0,3);
+}
+
+// ── RENDER RESULT ───────────────────────────────────────────────
+function showResult(picks) {
+  document.getElementById('resultHeadline').textContent = "Here Are Your Top Income Matches";
+  document.getElementById('resultSubtitle').textContent = "Personalised to your time, experience, and income goals. Click any card to explore and get started.";
+
+  const cardsEl = document.getElementById('resultCards');
+  cardsEl.innerHTML = picks.map(p => `
+    <div class="prog-card">
+      <div class="prog-name">${p.name}</div>
+      <div class="prog-hook">✦ ${p.hook}</div>
+      <div class="prog-body">
+        <strong style="color:var(--gold);font-size:13px;">Why this fits you:</strong><br>
+        ${p.personalised}<br><br>
+        ${p.body}
+      </div>
+      <div class="prog-meta">${(p.pills||[]).map(pi=>`<span class="meta-pill">${pi}</span>`).join('')}</div>
+      <a class="prog-cta" href="${p.link}" target="_blank" rel="noopener">
+        ${p.name === 'Instant Profits Club' ? 'Claim Free Membership →' : 'Get Started →'}
+      </a>
+    </div>
+  `).join('');
+
+  // Always-shown marketing section
+  const mktEl = document.getElementById('marketingCards');
+  mktEl.innerHTML = marketingPrograms.map(p => `
+    <div class="prog-card marketing">
+      <div class="prog-name">${p.name}</div>
+      <div class="prog-hook">✦ ${p.hook}</div>
+      <div class="prog-body">${p.body}</div>
+      <div class="prog-meta">${p.pills.map(pi=>`<span class="meta-pill">${pi}</span>`).join('')}</div>
+      <a class="prog-cta" href="${p.link}" target="_blank" rel="noopener">Explore ${p.name} →</a>
+    </div>
+  `).join('');
+
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function restart() {
+  currentQ = 0;
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('progressBar').style.display = 'flex';
+  document.getElementById('quiz').style.display = 'block';
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── INIT ────────────────────────────────────────────────────────
+renderQuestion();
+</script>
+</body>
+</html>
