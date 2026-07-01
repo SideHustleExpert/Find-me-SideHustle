@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Find Your Perfect Online Income Path</title>
+<title>Find Me A SideHustle — AI-Matched Side Hustles For Your Lifestyle</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
 
@@ -319,8 +319,8 @@
 
 <header>
   <div class="badge">Free · No signup required</div>
-  <h1>Find Your <span>Perfect</span> Online Income Path</h1>
-  <p>Answer 4 quick questions and our AI will match you to the best side hustle for your lifestyle — with everything you need to get started today.</p>
+  <h1>Find Me A <span>SideHustle</span></h1>
+  <p>Answer 4 quick questions and our AI will find your perfect side hustle match — personalised to your time, skills, and lifestyle, with everything you need to start earning today.</p>
 </header>
 
 <main>
@@ -341,7 +341,7 @@
   <!-- Loading -->
   <div id="loading">
     <div class="spinner"></div>
-    <p>Finding your best income matches…</p>
+    <p>Finding your perfect side hustle matches…</p>
   </div>
 
   <!-- Error -->
@@ -350,7 +350,7 @@
   <!-- Result -->
   <div id="result">
     <div class="result-header">
-      <div class="badge">Your Personal Match</div>
+      <div class="badge">Your Side Hustle Match</div>
       <h2 id="resultHeadline"></h2>
       <p id="resultSubtitle"></p>
     </div>
@@ -358,7 +358,7 @@
     <div class="section-divider"><span>🚀 Promote Any Hustle You Choose</span></div>
     <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">Whatever path you pick, you'll need traffic, leads and marketing tools. These four platforms are built exactly for that — and they work for any online business or side hustle.</p>
     <div id="marketingCards"></div>
-    <button class="restart-btn" onclick="restart()">↩ Start Over — Retake the Quiz</button>
+    <button class="restart-btn" onclick="restart()">↩ Find Me A Different SideHustle</button>
   </div>
 
   <p class="disclaimer">Results are personalised suggestions based on your answers. Individual earnings vary. This page contains affiliate links — we may earn a commission if you purchase through them, at no extra cost to you.</p>
@@ -749,8 +749,8 @@ function pickFallback() {
 
 // ── RENDER RESULT ───────────────────────────────────────────────
 function showResult(picks) {
-  document.getElementById('resultHeadline').textContent = "Here Are Your Top Income Matches";
-  document.getElementById('resultSubtitle').textContent = "Personalised to your time, experience, and income goals. Click any card to explore and get started.";
+  document.getElementById('resultHeadline').textContent = "We Found Your Side Hustle Matches!";
+  document.getElementById('resultSubtitle').textContent = "Matched to your time, experience, and income goals. Click any card to explore and start earning today.";
 
   const cardsEl = document.getElementById('resultCards');
   cardsEl.innerHTML = picks.map(p => `
