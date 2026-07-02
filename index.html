@@ -303,6 +303,75 @@
   }
   .restart-btn:hover { border-color: var(--gold); color: var(--text); }
 
+  /* ── EMAIL CAPTURE ── */
+  #emailCapture { display: none; animation: fadeUp 0.5s ease both; }
+  .email-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 40px 32px;
+    text-align: center;
+  }
+  .email-card .badge { background: rgba(245,166,35,0.12); border-color: rgba(245,166,35,0.35); color: var(--gold); margin-bottom: 16px; display: inline-block; }
+  .email-card h2 { font-family: 'Syne', sans-serif; font-size: clamp(20px,3.5vw,28px); font-weight: 800; margin-bottom: 10px; line-height: 1.3; }
+  .email-card p { color: var(--muted); font-size: 15px; margin-bottom: 28px; line-height: 1.6; }
+  .email-form { display: flex; flex-direction: column; gap: 12px; max-width: 420px; margin: 0 auto; }
+  .email-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: var(--text);
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .email-input:focus { border-color: var(--gold); }
+  .email-input::placeholder { color: var(--muted); }
+  .email-submit {
+    background: var(--gold);
+    color: #0b0f1a;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 14px 24px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .email-submit:hover { background: #e09410; transform: translateY(-1px); }
+  .email-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .skip-link {
+    color: var(--muted);
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    margin-top: 4px;
+  }
+  .skip-link:hover { color: var(--text); }
+  .email-success {
+    background: rgba(0,201,167,0.1);
+    border: 1px solid rgba(0,201,167,0.3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    color: var(--teal);
+    font-size: 14px;
+    margin-top: 16px;
+    display: none;
+  }
+  .consent-text {
+    font-size: 11px;
+    color: var(--muted);
+    opacity: 0.7;
+    line-height: 1.5;
+    margin-top: 8px;
+  }
+
   /* ── DISCLAIMER ── */
   .disclaimer {
     text-align: center;
@@ -336,6 +405,27 @@
   <!-- Quiz -->
   <div id="quiz">
     <div class="question-card" id="questionCard"></div>
+  </div>
+
+  <!-- Email Capture -->
+  <div id="emailCapture">
+    <div class="email-card">
+      <div class="badge">🎯 Your Matches Are Ready!</div>
+      <h2>Where Should We Send Your Side Hustle Matches?</h2>
+      <p>Enter your email to receive your personalised results plus future side hustle opportunities matched to your profile. No spam — ever.</p>
+      <div class="email-form">
+        <input type="text" class="email-input" id="firstNameInput" placeholder="Your first name (optional)" />
+        <input type="email" class="email-input" id="emailInput" placeholder="Your email address" />
+        <button class="email-submit" id="emailSubmitBtn" onclick="submitEmail()">
+          ✉️ Send Me My Matches
+        </button>
+        <button class="skip-link" onclick="skipEmail()">No thanks, just show me the results</button>
+        <p class="consent-text">By submitting your email you agree to receive your side hustle matches and occasional relevant opportunities from Find Me A SideHustle. You can unsubscribe anytime.</p>
+      </div>
+      <div class="email-success" id="emailSuccess">
+        ✅ Done! Check your inbox to confirm your email — then your matches will appear below.
+      </div>
+    </div>
   </div>
 
   <!-- Loading -->
@@ -656,20 +746,76 @@ function selectOption(value, btn) {
       card.style.animation = '';
       renderQuestion();
     } else {
-      showLoading();
-      getRecommendation();
+      showEmailCapture();
     }
   }, 380);
 }
 
 // ── SHOW/HIDE ───────────────────────────────────────────────────
-function showLoading() {
+function showEmailCapture() {
   document.getElementById('quiz').style.display = 'none';
   document.getElementById('progressBar').style.display = 'none';
+  document.getElementById('emailCapture').style.display = 'block';
+  document.getElementById('emailCapture').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function showLoading() {
+  document.getElementById('emailCapture').style.display = 'none';
   document.getElementById('loading').style.display = 'block';
 }
 function hideLoading() {
   document.getElementById('loading').style.display = 'none';
+}
+
+// ── EMAIL SUBMISSION ─────────────────────────────────────────────
+async function submitEmail() {
+  const email = document.getElementById('emailInput').value.trim();
+  const firstName = document.getElementById('firstNameInput').value.trim();
+  const btn = document.getElementById('emailSubmitBtn');
+  const successBox = document.getElementById('emailSuccess');
+
+  if (!email || !email.includes('@')) {
+    document.getElementById('emailInput').style.borderColor = 'var(--danger)';
+    document.getElementById('emailInput').placeholder = 'Please enter a valid email address';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    const response = await fetch('/.netlify/functions/submit-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, firstName })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      successBox.style.display = 'block';
+      btn.textContent = '✅ Email Submitted!';
+      // Wait 2 seconds then load results
+      setTimeout(() => {
+        showLoading();
+        getRecommendation();
+      }, 2000);
+    } else {
+      btn.disabled = false;
+      btn.textContent = '✉️ Send Me My Matches';
+      alert('Something went wrong. Please try again or skip to see your results.');
+    }
+  } catch (err) {
+    // If submission fails, still show results
+    btn.disabled = false;
+    btn.textContent = '✉️ Send Me My Matches';
+    showLoading();
+    getRecommendation();
+  }
+}
+
+function skipEmail() {
+  showLoading();
+  getRecommendation();
 }
 
 // ── AI RECOMMENDATION ───────────────────────────────────────────
@@ -789,6 +935,12 @@ function restart() {
   currentQ = 0;
   Object.keys(answers).forEach(k => delete answers[k]);
   document.getElementById('result').style.display = 'none';
+  document.getElementById('emailCapture').style.display = 'none';
+  document.getElementById('emailSuccess').style.display = 'none';
+  document.getElementById('emailInput') && (document.getElementById('emailInput').value = '');
+  document.getElementById('firstNameInput') && (document.getElementById('firstNameInput').value = '');
+  document.getElementById('emailSubmitBtn') && (document.getElementById('emailSubmitBtn').textContent = '✉️ Send Me My Matches');
+  document.getElementById('emailSubmitBtn') && (document.getElementById('emailSubmitBtn').disabled = false);
   document.getElementById('progressBar').style.display = 'flex';
   document.getElementById('quiz').style.display = 'block';
   renderQuestion();
