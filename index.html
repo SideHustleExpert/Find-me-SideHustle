@@ -410,20 +410,20 @@
   <!-- Email Capture -->
   <div id="emailCapture">
     <div class="email-card">
-      <div class="badge">🎯 Your Matches Are Ready!</div>
-      <h2>Where Should We Send Your Side Hustle Matches?</h2>
-      <p>Enter your email to receive your personalised results plus future side hustle opportunities matched to your profile. No spam — ever.</p>
+      <div class="badge">🎉 Congratulations — Your Match Is Ready!</div>
+      <h2>Secure Your Side Hustle Match Now</h2>
+      <p>Enter your email to secure your personalised matches and get exclusive early access to our future highest-performing side hustles — before anyone else. Don't miss out.</p>
       <div class="email-form">
         <input type="text" class="email-input" id="firstNameInput" placeholder="Your first name (optional)" />
         <input type="email" class="email-input" id="emailInput" placeholder="Your email address" />
         <button class="email-submit" id="emailSubmitBtn" onclick="submitEmail()">
-          ✉️ Send Me My Matches
+          🔒 Secure My Matches Now
         </button>
         <button class="skip-link" onclick="skipEmail()">No thanks, just show me the results</button>
-        <p class="consent-text">By submitting your email you agree to receive your side hustle matches and occasional relevant opportunities from Find Me A SideHustle. You can unsubscribe anytime.</p>
+        <p class="consent-text">By submitting your email you agree to receive your side hustle matches and exclusive future opportunities from Find Me A SideHustle. You can unsubscribe anytime.</p>
       </div>
       <div class="email-success" id="emailSuccess">
-        ✅ Done! Check your inbox to confirm your email — then your matches will appear below.
+        ✅ Done! Check your inbox, promotions tab, or spam folder — then return to this tab to see your matches.
       </div>
     </div>
   </div>
@@ -445,6 +445,9 @@
       <p id="resultSubtitle"></p>
     </div>
     <div id="resultCards"></div>
+    <div class="section-divider"><span>💡 You Might Also Like These</span></div>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">Based on what others with similar profiles have found interesting — plus a remote job option in case a full salary beats a side hustle for your situation right now.</p>
+    <div id="alsoLikeCards"></div>
     <div class="section-divider"><span>🚀 Promote Any Hustle You Choose</span></div>
     <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">Whatever path you pick, you'll need traffic, leads and marketing tools. These four platforms are built exactly for that — and they work for any online business or side hustle.</p>
     <div id="marketingCards"></div>
@@ -676,6 +679,14 @@ const programs = {
 // ── ALWAYS-SHOWN MARKETING PROGRAMS ────────────────────────────
 const marketingPrograms = [
   {
+    name: "HOOKD",
+    hook: "Build AI-powered digital 'Entities' people can't stop using — and earn every time they return",
+    body: "HOOKD lets you create interactive AI-powered digital Entities — not chatbots, not funnels — that people engage with obsessively and return to daily. The platform has built-in monetization, meaning every interaction pays creators automatically without any selling or pitching. You build the Entity once and it becomes a self-sustaining attention magnet with built-in affiliate monetization in any niche. Already reaching 700,000+ recurring users. No followers, no product, no experience required.",
+    pills: ["Built-in monetization", "700K+ users", "Any niche", "No experience needed"],
+    cta: "Get HOOKD Now →",
+    link: "https://warriorplus.com/o2/a/w31p4rc/0"
+  },
+  {
     name: "Crush AI",
     hook: "AI-powered digital advertising — get your offer in front of buyers automatically",
     body: "Crush AI is a smart digital advertising platform that uses artificial intelligence to help online marketers and side hustlers run more effective promotions with less effort. Whether you're promoting affiliate offers, your own products, or a side hustle, Crush AI analyses your campaign and automates the ad targeting process — putting your offer in front of people most likely to buy. Perfect for any side hustle that needs traffic and visibility without requiring you to become an ad expert.",
@@ -700,6 +711,38 @@ const marketingPrograms = [
     link: "https://leadsleap.com/?r=comfyswiss02"
   }
 ];
+
+// ── ROTATING AI JOBS ─────────────────────────────────────────────
+const aiJobsOptions = [
+  {
+    name: "AI & Tech Remote Jobs",
+    hook: "Skip the hustle — get paid a full remote salary with your current skills",
+    body: "Global companies are actively hiring remote workers for AI, tech, and digital roles — from complete beginners doing AI training tasks to experienced developers and analysts. No commute, no office, competitive salaries paid in dollars. micro1 matches people with AI and SaaS skills to remote opportunities with top companies worldwide. If a steady remote income suits your lifestyle better than building a side hustle from scratch, this is your fastest route.",
+    pills: ["Remote work", "AI & tech roles", "All skill levels", "Dollar salaries"],
+    cta: "Explore AI Remote Jobs →",
+    link: "https://refer.micro1.ai/referral/jobs?referralCode=096af670-f6b7-43a3-9052-e392ed5b1c11&utm_source=referral&utm_medium=share&utm_campaign=job_referral"
+  },
+  {
+    name: "AI & Tech Remote Jobs",
+    hook: "Skip the hustle — get paid a full remote salary with your current skills",
+    body: "Global companies are actively hiring remote workers for AI, tech, and digital roles — from complete beginners doing AI training tasks to experienced developers and analysts. No commute, no office, competitive salaries paid in dollars. Mercor connects talented individuals to top remote opportunities across AI, engineering, and digital marketing. If a steady remote income suits your lifestyle better than building a side hustle from scratch, this is your fastest route.",
+    pills: ["Remote work", "AI & tech roles", "All skill levels", "Dollar salaries"],
+    cta: "Explore AI Remote Jobs →",
+    link: "https://t.mercor.com/SUFR7"
+  },
+  {
+    name: "AI & Tech Remote Jobs",
+    hook: "Skip the hustle — get paid a full remote salary with your current skills",
+    body: "Global companies are actively hiring remote workers for AI, tech, and digital roles — from complete beginners doing AI training tasks to experienced developers and analysts. No commute, no office, competitive salaries paid in dollars. Turing connects top remote talent to leading US companies across dozens of roles and skill levels. Start with a quick chat with a placement expert who will match you to the right opportunity.",
+    pills: ["Remote work", "AI & tech roles", "All skill levels", "Dollar salaries"],
+    cta: "Chat With an Expert for Placement →",
+    link: "https://wa.link/c71yl5"
+  }
+];
+
+function getRandomAIJob() {
+  return aiJobsOptions[Math.floor(Math.random() * aiJobsOptions.length)];
+}
 
 // ── STATE ───────────────────────────────────────────────────────
 let currentQ = 0;
@@ -831,18 +874,24 @@ Preferred income type: ${answers.incomeType}
 Experience level: ${answers.experience}
   `.trim();
 
+  // Add a random seed so repeat sessions with same answers get varied results
+  const randomSeed = Math.floor(Math.random() * 1000);
+
   const prompt = `You are an expert online income advisor. Based on the user's profile below, select exactly 3 programs from the program list that best match their situation. Return ONLY a valid JSON array with no markdown, no explanation — just the JSON.
 
 USER PROFILE:
 ${userProfile}
+
+RANDOM SEED (use this to vary your selection if multiple good options exist): ${randomSeed}
 
 PROGRAMS TO CHOOSE FROM:
 ${programList}
 
 INSTRUCTIONS:
 1. Pick the 3 programs that genuinely fit the user's time, situation, income preference, and experience level best.
-2. For each selected program, write a short personalised "why this fits you" paragraph (2-3 sentences) referencing the user's specific situation. Keep it encouraging and specific.
-3. Return JSON in this exact format:
+2. Where multiple programs are equally suitable, use the random seed to vary which ones you select — do NOT always pick the same programs for the same profile. Rotate your choices to give users fresh results each time.
+3. For each selected program, write a short personalised "why this fits you" paragraph (2-3 sentences) referencing the user's specific situation. Keep it encouraging and specific.
+4. Return JSON in this exact format:
 [
   {
     "name": "Program Name Here",
@@ -898,6 +947,7 @@ function showResult(picks) {
   document.getElementById('resultHeadline').textContent = "We Found Your Side Hustle Matches!";
   document.getElementById('resultSubtitle').textContent = "Matched to your time, experience, and income goals. Click any card to explore and start earning today.";
 
+  // Render top 3 personalised picks
   const cardsEl = document.getElementById('resultCards');
   cardsEl.innerHTML = picks.map(p => `
     <div class="prog-card">
@@ -915,7 +965,37 @@ function showResult(picks) {
     </div>
   `).join('');
 
-  // Always-shown marketing section
+  // ── YOU MIGHT ALSO LIKE — 3 random from remaining pool + 1 rotating AI job ──
+  const pickedNames = picks.map(p => p.name);
+  const remaining = Object.values(programs).filter(p => !pickedNames.includes(p.name));
+  // Shuffle remaining programs
+  for (let i = remaining.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [remaining[i], remaining[j]] = [remaining[j], remaining[i]];
+  }
+  const alsoLike = remaining.slice(0, 3);
+  const aiJob = getRandomAIJob();
+
+  const alsoEl = document.getElementById('alsoLikeCards');
+  alsoEl.innerHTML = [...alsoLike.map(p => `
+    <div class="prog-card">
+      <div class="prog-name">${p.name}</div>
+      <div class="prog-hook">✦ ${p.hook}</div>
+      <div class="prog-body">${p.body}</div>
+      <div class="prog-meta">${(p.pills||[]).map(pi=>`<span class="meta-pill">${pi}</span>`).join('')}</div>
+      <a class="prog-cta" href="${p.link}" target="_blank" rel="noopener">Get Started →</a>
+    </div>
+  `), `
+    <div class="prog-card">
+      <div class="prog-name">${aiJob.name}</div>
+      <div class="prog-hook">✦ ${aiJob.hook}</div>
+      <div class="prog-body">${aiJob.body}</div>
+      <div class="prog-meta">${aiJob.pills.map(pi=>`<span class="meta-pill">${pi}</span>`).join('')}</div>
+      <a class="prog-cta" href="${aiJob.link}" target="_blank" rel="noopener">${aiJob.cta}</a>
+    </div>
+  `].join('');
+
+  // Always-shown marketing section (4 programs: Hookd, Crush AI, MLGS, LeadsLeap)
   const mktEl = document.getElementById('marketingCards');
   mktEl.innerHTML = marketingPrograms.map(p => `
     <div class="prog-card marketing">
@@ -923,7 +1003,7 @@ function showResult(picks) {
       <div class="prog-hook">✦ ${p.hook}</div>
       <div class="prog-body">${p.body}</div>
       <div class="prog-meta">${p.pills.map(pi=>`<span class="meta-pill">${pi}</span>`).join('')}</div>
-      <a class="prog-cta" href="${p.link}" target="_blank" rel="noopener">Explore ${p.name} →</a>
+      <a class="prog-cta" href="${p.link}" target="_blank" rel="noopener">${p.cta}</a>
     </div>
   `).join('');
 
