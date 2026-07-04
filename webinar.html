@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Find Me A SideHustle — Live Walkthrough</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0E14;
+    --panel:#12161F;
+    --panel-2:#171C27;
+    --line:#232A38;
+    --text:#E8EAED;
+    --muted:#7A8194;
+    --signal:#FF5D5D;
+    --brand:#F5C065;      /* gold — "opportunity" accent */
+    --brand-dim:#5C4A26;
+    --teal:#5EEAD4;        /* secondary accent for host/links */
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- GATE ---------- */
+  #gate{
+    width:100%; max-width:560px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:48px 40px;
+    text-align:center;
+  }
+  #gate .eyebrow{color:var(--brand); font-size:12px; letter-spacing:.14em; text-transform:uppercase; font-weight:500;}
+  #gate h1{font-family:'Space Grotesk',sans-serif; font-size:27px; line-height:1.28; margin:14px 0 8px;}
+  #gate p{color:var(--muted); font-size:14px; margin:0 0 28px;}
+  #countdown{font-family:'IBM Plex Mono',monospace; font-size:44px; font-weight:500; letter-spacing:.05em; margin-bottom:28px;}
+  #countdown span{color:var(--brand);}
+  .fake-avatars{display:flex; justify-content:center; margin-bottom:14px;}
+  .fake-avatars .av{width:30px;height:30px;border-radius:50%;border:2px solid var(--panel);margin-left:-8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#0B0E14;}
+  .join-note{font-size:13px; color:var(--muted);}
+  .join-note b{color:var(--text);}
+  .gate-disclosure{margin-top:22px; font-size:11px; color:var(--muted); line-height:1.5; border-top:1px solid var(--line); padding-top:16px;}
+
+  /* ---------- ROOM ---------- */
+  #room{display:none; width:100%; max-width:1180px; background:var(--panel); border:1px solid var(--line); border-radius:14px; overflow:hidden;}
+  .topbar{display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid var(--line); background:var(--panel-2);}
+  .live-badge{display:flex; align-items:center; gap:8px; background:rgba(255,93,93,.12); border:1px solid rgba(255,93,93,.35); color:var(--signal); font-size:12px; font-weight:600; letter-spacing:.06em; padding:5px 10px 5px 8px; border-radius:20px;}
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--signal);animation:pulse 1.4s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,93,93,.55);}70%{box-shadow:0 0 0 7px rgba(255,93,93,0);}100%{box-shadow:0 0 0 0 rgba(255,93,93,0);}}
+  .bars{display:flex; align-items:flex-end; gap:2px; height:12px; margin-left:2px;}
+  .bars i{width:2px; background:var(--signal); display:block; animation:bar 1s infinite ease-in-out;}
+  .bars i:nth-child(1){height:40%; animation-delay:.1s;}
+  .bars i:nth-child(2){height:100%; animation-delay:.3s;}
+  .bars i:nth-child(3){height:65%; animation-delay:.5s;}
+  @keyframes bar{0%,100%{transform:scaleY(.4);}50%{transform:scaleY(1);}}
+  .topbar-right{display:flex; align-items:center; gap:18px; font-size:13px; color:var(--muted);}
+  .topbar-right .stat b{color:var(--text); font-weight:600;}
+
+  .room-body{display:flex; min-height:520px;}
+  .stage{flex:1; display:flex; flex-direction:column; border-right:1px solid var(--line); min-width:0;}
+  .screen{flex:1; background:radial-gradient(circle at 30% 20%, #1E1A0F, #0B0E14 70%); display:flex; flex-direction:column; align-items:flex-start; justify-content:center; padding:44px 48px; position:relative;}
+  .slide-eyebrow{font-family:'IBM Plex Mono',monospace; color:var(--brand); font-size:12px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:14px;}
+  .slide-title{font-family:'Space Grotesk',sans-serif; font-size:30px; font-weight:600; line-height:1.22; max-width:540px; margin:0 0 14px;}
+  .slide-body{color:var(--muted); font-size:15px; line-height:1.6; max-width:500px;}
+  .slide-list{margin:14px 0 0; padding-left:18px; color:var(--text); font-size:14px; line-height:1.9;}
+  .slide-list b{color:var(--brand);}
+  .caption-bar{background:var(--panel-2); border-top:1px solid var(--line); padding:14px 48px; font-size:14px; color:var(--text); min-height:22px; line-height:1.5;}
+  .caption-bar .cursor{display:inline-block; width:2px; height:14px; background:var(--brand); margin-left:2px; vertical-align:middle; animation:blink 1s step-end infinite;}
+  @keyframes blink{50%{opacity:0;}}
+  .progress-track{height:3px; width:100%; background:var(--line);}
+  .progress-fill{height:100%; background:var(--brand); width:0%; transition:width .3s linear;}
+
+  #cta{display:none; background:linear-gradient(90deg, #1E1A0F, #12161F); border-top:1px solid var(--brand-dim); padding:14px 48px; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+  #cta .cta-text{font-size:14px; max-width:560px;}
+  #cta .cta-text b{color:var(--brand);}
+  #cta a.cta-btn{background:var(--brand); color:#241C08; border:none; font-weight:600; font-size:13px; padding:10px 18px; border-radius:8px; cursor:pointer; white-space:nowrap; text-decoration:none;}
+  #cta a.cta-btn:hover{filter:brightness(1.08);}
+
+  .chat{width:320px; display:flex; flex-direction:column; background:var(--panel);}
+  .chat-head{padding:14px 18px; border-bottom:1px solid var(--line); font-size:13px; color:var(--muted); display:flex; justify-content:space-between; align-items:center;}
+  .chat-messages{flex:1; overflow-y:auto; padding:14px 16px; display:flex; flex-direction:column; gap:12px;}
+  .msg{display:flex; gap:9px; align-items:flex-start;}
+  .msg .av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#0B0E14;flex-shrink:0;margin-top:1px;}
+  .msg .body{font-size:13.5px; line-height:1.45;}
+  .msg .name{font-weight:600; font-size:12.5px; margin-right:6px;}
+  .msg.host .name{color:var(--teal);}
+  .msg .name.tag{font-size:9px; background:rgba(94,234,212,.15); color:var(--teal); padding:1px 5px; border-radius:4px; margin-left:5px; vertical-align:middle; font-weight:600;}
+  .msg .text{color:var(--text);}
+  .typing{font-size:12px; color:var(--muted); padding:0 16px 8px; min-height:16px;}
+  .chat-input{border-top:1px solid var(--line); padding:10px 12px; display:flex; gap:8px;}
+  .chat-input input{flex:1; background:var(--panel-2); border:1px solid var(--line); border-radius:8px; padding:10px 12px; color:var(--text); font-size:13px; font-family:'Inter',sans-serif; outline:none;}
+  .chat-input input:focus{border-color:var(--brand-dim);}
+  .chat-input button{background:var(--brand); border:none; border-radius:8px; padding:0 14px; color:#241C08; font-weight:600; cursor:pointer; font-size:13px;}
+
+  .footer-disclosure{padding:12px 20px; font-size:11px; color:var(--muted); border-top:1px solid var(--line); background:var(--panel-2); text-align:center; line-height:1.5;}
+
+  @media(max-width:820px){
+    .room-body{flex-direction:column;}
+    .chat{width:100%; height:340px;}
+    .stage{border-right:none; border-bottom:1px solid var(--line);}
+    .slide-title{font-size:23px;}
+    .screen{padding:28px 24px;}
+    .caption-bar, #cta{padding-left:24px; padding-right:24px;}
+  }
+  @media (prefers-reduced-motion: reduce){.live-dot, .bars i{animation:none;}}
+</style>
+</head>
+<body>
+
+<!-- ============= GATE ============= -->
+<div id="gate">
+  <div class="eyebrow">Live Walkthrough</div>
+  <h1>How Find Me A SideHustle matches you to a hustle in under 60 seconds</h1>
+  <p>Hosted by Jordan, Creator of Find Me A SideHustle</p>
+  <div id="countdown">Starting in <span id="cd-time">00:05</span></div>
+  <div class="fake-avatars" id="fake-avatars"></div>
+  <div class="join-note"><b id="live-count">96</b> people just joined the room</div>
+  <div class="gate-disclosure">This session contains affiliate links. If you join a program shown here, Jordan may earn a commission at no extra cost to you. Individual results vary.</div>
+</div>
+
+<!-- ============= ROOM ============= -->
+<div id="room">
+  <div class="topbar">
+    <div class="live-badge"><span class="live-dot"></span>LIVE<span class="bars"><i></i><i></i><i></i></span></div>
+    <div class="topbar-right">
+      <div class="stat"><b id="viewer-count">183</b> watching</div>
+      <div class="mono" id="elapsed">00:00</div>
+    </div>
+  </div>
+
+  <div class="room-body">
+    <div class="stage">
+      <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+      <div class="screen">
+        <div class="slide-eyebrow" id="slide-eyebrow">01 / Welcome</div>
+        <div class="slide-title" id="slide-title">Welcome — thanks for hopping on</div>
+        <div class="slide-body" id="slide-body">In the next few minutes I'll show you exactly how Find Me A SideHustle matches people to a hustle that actually fits their life — not a generic list.</div>
+      </div>
+      <div class="caption-bar"><span id="caption-text"></span><span class="cursor"></span></div>
+      <div id="cta">
+        <div class="cta-text">Try it free — 4 questions, no signup required to see your matches. <b>findmesidehustle</b></div>
+        <a class="cta-btn" href="https://find-me-sidehustle.netlify.app/" target="_blank" rel="noopener">Take the free quiz</a>
+      </div>
+    </div>
+
+    <div class="chat">
+      <div class="chat-head"><span>Live chat</span><span id="chat-count">183 online</span></div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="typing" id="typing-indicator"></div>
+      <div class="chat-input">
+        <input id="chat-input" type="text" placeholder="Ask a question…" onkeydown="if(event.key==='Enter')sendChat()">
+        <button onclick="sendChat()">Send</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer-disclosure">Find Me A SideHustle contains affiliate links — signing up for a program may earn Jordan a commission at no extra cost to you. Earnings are not guaranteed and individual results vary.</div>
+</div>
+
+<script>
+/* =========================================================================
+   EDIT ME: slide script. time = seconds from when the room goes live.
+   ========================================================================= */
+const SLIDES = [
+  { time: 0, eyebrow: "01 / Welcome", title: "Welcome — thanks for hopping on",
+    body: "In the next few minutes I'll show you exactly how Find Me A SideHustle matches people to a hustle that actually fits their life — not a generic list.",
+    caption: "Hey everyone — give it a second while more people join, then we'll dive in." },
+
+  { time: 25, eyebrow: "02 / The problem", title: "There are hundreds of \u201cmake money online\u201d options — most people freeze",
+    body: "Scrolling through every side hustle, course, and app out there is overwhelming, and most of it isn't relevant to your actual time, skills, or situation.",
+    caption: "That's exactly the problem I built this to solve — matching instead of scrolling." },
+
+  { time: 55, eyebrow: "03 / How it works", title: "4 quick questions → 3 personalised matches",
+    body: "The quiz asks about your personality, availability, experience level, and current work situation. No signup required just to see your results.",
+    caption: "It takes under a minute, and it's completely free to use." },
+
+  { time: 85, eyebrow: "04 / You may also like", title: "Beyond your top 3: more options, plus a remote job pick",
+    body: "Every result page also shows four extra picks other similar profiles found interesting — and one rotating AI/tech remote job suggestion from Micro1, Mercor, or Turing, in case a steady role fits better than a side hustle right now.",
+    caption: "That remote job slot is new — it's there for anyone who'd rather explore a full role instead." },
+
+  { time: 115, eyebrow: "05 / Advertise your hustle", title: "Whatever you pick, you'll need traffic and leads",
+    body: "The site also lists four tools built for promoting any online hustle — Hookd, Crush AI, My Lead Gen Secret, and Leadsleap — useful once you've chosen a direction and want to grow it.",
+    caption: "These aren't the side hustles themselves — they're tools for promoting whichever one you go with." },
+
+  { time: 145, eyebrow: "06 / Why now", title: "Newer programs tend to reward early participants",
+    body: "This isn't guaranteed for every program, but it's a common pattern: the earlier you're active in something new, the more room there tends to be before it gets saturated. Worth factoring in if one of your matches is new to you.",
+    caption: "That's genuinely just how I'd think about it — take a look at your matches and judge for yourself." },
+];
+const TOTAL_DURATION = 175;
+
+/* =========================================================================
+   EDIT ME: scripted chat. Kept to plausible, non-fabricated reactions —
+   no invented dollar amounts, no fake "I signed up weeks ago" backstories.
+   ========================================================================= */
+const CHAT_SCRIPT = [
+  { time: 4,   name: "Marcus O.",  host:false, text: "just made it, hi all" },
+  { time: 10,  name: "Renee A.",   host:false, text: "curious how the matching actually works" },
+  { time: 20,  name: "Jordan",     host:true,  text: "Welcome everyone — ask anything, I'm reading live 👋" },
+  { time: 32,  name: "Tomiwa E.",  host:false, text: "yeah I have this problem, too many options and I never pick one" },
+  { time: 48,  name: "Grace L.",   host:false, text: "taking the quiz right now on my phone" },
+  { time: 60,  name: "Grace L.",   host:false, text: "omg it actually matched something I hadn't thought of" },
+  { time: 66,  name: "Jordan",     host:true,  text: "@Grace L. that's the idea — it's based on your actual answers, not a generic top-10 list" },
+  { time: 80,  name: "Sam K.",     host:false, text: "wait is it really free, no card or signup?" },
+  { time: 84,  name: "Jordan",     host:true,  text: "@Sam K. 100% free, no signup needed just to see your matches" },
+  { time: 100, name: "Priya D.",   host:false, text: "the remote job suggestion is a nice touch, didn't expect that" },
+  { time: 112, name: "Tomiwa E.",  host:false, text: "checking the you-may-also-like section now" },
+  { time: 128, name: "Renee A.",   host:false, text: "the promo tools section is handy if I want to grow whatever I pick" },
+  { time: 150, name: "Marcus O.",  host:false, text: "going to actually run the quiz after this" },
+  { time: 160, name: "Sam K.",     host:false, text: "same, bookmarking the link" },
+];
+
+/* Canned auto-replies for real viewer messages */
+const AUTO_REPLIES = [
+  { match: /free|cost|price|signup|sign up|card/i, reply: "Totally free — no signup required just to see your matches. Email is only needed if you want them saved." },
+  { match: /quiz|question|how.*work|match/i,        reply: "It's 4 quick questions about your time, skills, experience, and work situation — takes under a minute." },
+  { match: /remote|micro1|mercor|turing|job/i,       reply: "That's the newest addition — a rotating AI/tech remote job suggestion alongside your side hustle matches." },
+  { match: /promote|traffic|lead|advertis/i,         reply: "Those four tools in the 'Advertise Your Hustle' section are there once you've picked a direction and want to grow it." },
+  { match: /.*/,                                      reply: "Good question — take a look at the site, happy to dig into specifics too!" },
+];
+
+const AVATAR_COLORS = ["#F5C065","#5EEAD4","#FF9F7F","#8DA9FF","#C792EA","#7EE787"];
+function colorFor(name){let h=0; for(const c of name) h=(h*31+c.charCodeAt(0))%AVATAR_COLORS.length; return AVATAR_COLORS[h];}
+function initials(name){return name.split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();}
+
+/* ---------------- Gate ---------------- */
+const avatarsEl = document.getElementById("fake-avatars");
+["MO","RA","TE","GL"].forEach((ini,i)=>{
+  const d=document.createElement("div"); d.className="av";
+  d.style.background=AVATAR_COLORS[i%AVATAR_COLORS.length]; d.textContent=ini;
+  avatarsEl.appendChild(d);
+});
+let liveCount = 96;
+const liveCountEl = document.getElementById("live-count");
+setInterval(()=>{ liveCount += Math.floor(Math.random()*3)+1; liveCountEl.textContent = liveCount; }, 900);
+
+let cdSeconds = 5;
+const cdEl = document.getElementById("cd-time");
+const cdTimer = setInterval(()=>{
+  cdSeconds -= 1;
+  cdEl.textContent = "00:" + String(Math.max(cdSeconds,0)).padStart(2,"0");
+  if(cdSeconds <= 0){
+    clearInterval(cdTimer);
+    document.getElementById("gate").style.display = "none";
+    document.getElementById("room").style.display = "block";
+    startWebinar();
+  }
+}, 1000);
+
+/* ---------------- Room ---------------- */
+let elapsed = 0, webinarTimer = null, chatScriptPointer = 0, slideIndex = -1;
+const chatMessagesEl = document.getElementById("chat-messages");
+const typingEl = document.getElementById("typing-indicator");
+const elapsedEl = document.getElementById("elapsed");
+const progressEl = document.getElementById("progress");
+const viewerCountEl = document.getElementById("viewer-count");
+const chatCountEl = document.getElementById("chat-count");
+const ctaEl = document.getElementById("cta");
+
+function fmt(s){ s=Math.max(0,Math.floor(s)); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); }
+
+function addMessage(name, text, isHost){
+  const row=document.createElement("div"); row.className="msg"+(isHost?" host":"");
+  const av=document.createElement("div"); av.className="av";
+  av.style.background = isHost ? "var(--teal)" : colorFor(name);
+  av.textContent = initials(name);
+  const body=document.createElement("div"); body.className="body";
+  body.innerHTML = `<span class="name">${name}</span>${isHost?'<span class="name tag">HOST</span>':''}<span class="text">${text}</span>`;
+  row.appendChild(av); row.appendChild(body);
+  chatMessagesEl.appendChild(row);
+  chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+}
+
+function typeCaption(text){
+  const el=document.getElementById("caption-text"); el.textContent="";
+  let i=0; const speed=18;
+  const iv=setInterval(()=>{ el.textContent += text[i]||""; i++; if(i>=text.length) clearInterval(iv); }, speed);
+}
+
+function renderSlide(idx){
+  const s = SLIDES[idx];
+  document.getElementById("slide-eyebrow").textContent = s.eyebrow;
+  document.getElementById("slide-title").textContent = s.title;
+  document.getElementById("slide-body").textContent = s.body;
+  typeCaption(s.caption);
+}
+
+function startWebinar(){
+  renderSlide(0); slideIndex = 0;
+  webinarTimer = setInterval(()=>{
+    elapsed += 1;
+    elapsedEl.textContent = fmt(elapsed);
+    progressEl.style.width = Math.min(100, (elapsed/TOTAL_DURATION)*100) + "%";
+
+    const nextIdx = SLIDES.findIndex((s,i)=> i > slideIndex && s.time <= elapsed);
+    if(nextIdx !== -1){ slideIndex = nextIdx; renderSlide(slideIndex); }
+
+    while(chatScriptPointer < CHAT_SCRIPT.length && CHAT_SCRIPT[chatScriptPointer].time <= elapsed){
+      const m = CHAT_SCRIPT[chatScriptPointer];
+      addMessage(m.name, m.text, m.host);
+      chatScriptPointer++;
+    }
+
+    if(elapsed % 4 === 0){
+      const delta = Math.floor(Math.random()*5) - 2;
+      const current = parseInt(viewerCountEl.textContent, 10);
+      const updated = Math.max(140, current + delta);
+      viewerCountEl.textContent = updated;
+      chatCountEl.textContent = updated + " online";
+    }
+
+    if(elapsed >= TOTAL_DURATION - 55){ ctaEl.style.display = "flex"; }
+
+    if(elapsed >= TOTAL_DURATION){
+      elapsed = 0; slideIndex = -1; chatScriptPointer = 0;
+      chatMessagesEl.innerHTML = ""; ctaEl.style.display = "none";
+      renderSlide(0); slideIndex = 0;
+    }
+  }, 1000);
+}
+
+function sendChat(){
+  const input = document.getElementById("chat-input");
+  const text = input.value.trim();
+  if(!text) return;
+  addMessage("You", text, false);
+  input.value = "";
+  typingEl.textContent = "Jordan is typing…";
+  const delay = 1400 + Math.random()*1800;
+  setTimeout(()=>{
+    typingEl.textContent = "";
+    const rule = AUTO_REPLIES.find(r => r.match.test(text));
+    addMessage("Jordan", rule.reply, true);
+  }, delay);
+}
+</script>
+</body>
+</html>
